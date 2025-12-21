@@ -7,9 +7,11 @@ function createWindow() {
     height: 600,
   });
 
-  win.loadFile(
-    path.join(__dirname, "../react-ui/dist/index.html")
-  );
+  // For dev
+  // win.loadURL("http://localhost:5173");
+
+  //For Prod. build
+  win.loadFile(path.join(__dirname, "../react-ui/dist/index.html"));
 }
 
 app.whenReady().then(createWindow);

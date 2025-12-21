@@ -2,8 +2,9 @@
   "name": "desktop-weather-app",
   "version": "1.0.0",
   "description": "Trying out a desktop weather application using JavaScript.",
-  "main": "index.js",
+  "main": "electron/main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
