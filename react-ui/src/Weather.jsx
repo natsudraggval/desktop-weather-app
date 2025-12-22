@@ -24,52 +24,113 @@ function Weather() {
             .catch(() => setError("City not found"));
     };
 
-    // Fetch weather when app starts
+    // Fetch weather automatically when app starts
     useEffect(() => {
         fetchWeather();
     }, []);
 
     return (
-        <div className="h-screen flex items-center justify-center bg-gray-900 text-white">
-            <div className="bg-gray-800 p-6 rounded-lg w-80 text-center">
-                <h1 className="text-2xl font-bold mb-4">Weather App</h1>
-
-                {/* City Input */}
-                <input
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    placeholder="Enter city"
-                    className="w-full p-2 mb-3 rounded text-black"
-                />
-
-                {/* Buttons */}
-                <div className="flex gap-2 mb-4">
-                    <button
-                        onClick={fetchWeather}
-                        className="flex-1 bg-blue-500 py-2 rounded hover:bg-blue-600"
-                    >
-                        Search
-                    </button>
+        <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center text-white">
+            <div className="w-130 rounded-3xl bg-white/10 backdrop-blur-xl shadow-2xl border border-white/20 px-10 py-8">
+                {/* Search and refresh */}
+                <div className="flex items-center gap-3 mb-6">
+                    <input
+                        type="text"
+                        value={city}
+                        onChange={(e) => setCity(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && fetchWeather()}
+                        placeholder="Search city..."
+                        className="flex-1 rounded-xl bg-white/10 border border-white/20 px-4 py-3 text-sm placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
+                    />
 
                     <button
                         onClick={fetchWeather}
-                        className="flex-1 bg-green-500 py-2 rounded hover:bg-green-600"
+                        className="h-11 w-11 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center text-lg hover:bg-white/20"
+                        title="Refresh"
                     >
-                        Refresh
+                        ⟳
                     </button>
                 </div>
 
                 {/* Error */}
-                {error && <p className="text-red-400">{error}</p>}
+                {error && <p className="text-red-400 text-center mb-4">{error}</p>}
 
-                {/* Weather Data */}
                 {weather && (
-                    <div>
-                        <p className="text-lg">City: {weather.name}</p>
-                        <p className="text-lg">Temp: {weather.main.temp}°C</p>
-                        <p className="text-lg">{weather.weather[0].main}</p>
-                    </div>
+                    <>
+                        {/* Header */}
+                        <div className="flex justify-between items-start mb-8">
+                            <div>
+                                <h1 className="text-3xl font-semibold tracking-wide">
+                                    {weather.name}
+                                </h1>
+                                <p className="text-sm text-white/60 mt-1">
+                                    {new Date().toLocaleDateString("en-US", {
+                                        weekday: "long",
+                                        day: "numeric",
+                                        month: "long",
+                                    })}
+                                </p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-5xl font-light leading-none">
+                                    {Math.round(weather.main.temp)}°
+                                </p>
+                                <p className="text-sm text-white/60 mt-1">
+                                    {weather.weather[0].main}
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Main Weather */}
+                        <div className="flex items-center justify-between mb-10">
+                            <div className="text-7xl">
+                                {weather.weather[0].main === "Clear" && "☀️"}
+                                {weather.weather[0].main === "Clouds" && "☁️"}
+                                {weather.weather[0].main === "Rain" && "🌧️"}
+                                {weather.weather[0].main === "Snow" && "❄️"}
+                            </div>
+                            <div className="text-right">
+                                <p className="text-sm uppercase tracking-wide text-white/60">
+                                    Feels like
+                                </p>
+                                <p className="text-4xl font-semibold">
+                                    {Math.round(weather.main.feels_like)}°
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="my-6 h-px bg-white/20"></div>
+
+                        {/* Stats */}
+                        <div className="grid grid-cols-3 gap-5 text-center">
+                            <div className="rounded-2xl bg-white/10 py-5">
+                                <p className="text-xs uppercase tracking-wide text-white/60">
+                                    Humidity
+                                </p>
+                                <p className="text-2xl font-semibold mt-1">
+                                    {weather.main.humidity}%
+                                </p>
+                            </div>
+
+                            <div className="rounded-2xl bg-white/10 py-5">
+                                <p className="text-xs uppercase tracking-wide text-white/60">
+                                    Wind
+                                </p>
+                                <p className="text-2xl font-semibold mt-1">
+                                    {Math.round(weather.wind.speed * 3.6)} km/h
+                                </p>
+                            </div>
+
+                            <div className="rounded-2xl bg-white/10 py-5">
+                                <p className="text-xs uppercase tracking-wide text-white/60">
+                                    Pressure
+                                </p>
+                                <p className="text-2xl font-semibold mt-1">
+                                    {weather.main.pressure} hPa
+                                </p>
+                            </div>
+                        </div>
+                    </>
                 )}
             </div>
         </div>
