@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
+import spinner from "./assets/spinner.svg";
 
 function Weather() {
     const [city, setCity] = useState("Kathmandu");
     const [weather, setWeather] = useState(null);
     const [error, setError] = useState("");
 
+    const [loading, setLoading] = useState(false);
+
     const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
 
     const fetchWeather = () => {
         setError("");
         setWeather(null);
+
+        setLoading(true);
 
         fetch(
             `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`
@@ -21,7 +26,8 @@ function Weather() {
                 return res.json();
             })
             .then(data => setWeather(data))
-            .catch(() => setError("City not found"));
+            .catch(() => setError("City not found"))
+            .finally(() => setLoading(false));
     };
 
     // Fetch weather automatically when app starts
@@ -55,7 +61,17 @@ function Weather() {
                 {/* Error */}
                 {error && <p className="text-red-400 text-center mb-4">{error}</p>}
 
-                {weather && (
+                {/* Loading */}
+                {loading && (<div className="flex justify-center my-8">
+                    <img
+                        src={spinner}
+                        alt="Loading..."
+                        className="h-12 w-12"
+                    />
+                </div>)}
+
+
+                {weather && !loading && (
                     <>
                         {/* Header */}
                         <div className="flex justify-between items-start mb-8">
@@ -99,7 +115,7 @@ function Weather() {
                             </div>
                         </div>
 
-                        <div class="my-6 h-px bg-white/20"></div>
+                        <div className="my-6 h-px bg-white/20"></div>
 
                         {/* Stats */}
                         <div className="grid grid-cols-3 gap-5 text-center">
