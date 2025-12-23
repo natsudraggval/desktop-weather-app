@@ -5,6 +5,8 @@ function createWindow() {
   const win = new BrowserWindow({
     width: 900,
     height: 600,
+    title: "Weather-Buddy",
+    icon: path.join(__dirname, "../build/favicon.ico"),
   });
 
   // For dev
